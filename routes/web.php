@@ -13,6 +13,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Auth::routes();
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::group(['middleware' => 'activeUser'], function () {
+    Route::get('/dashboard', 'HomeController@index')->name('dashboard');
+    Route::resource('/posts', 'PostsController');
+});
+
+Route::group(['middleware' => ['activeUser', 'admin']], function () {
+    Route::resource('/users', 'UsersController');
 });
